@@ -58,13 +58,13 @@ def copy_short_url(e, short_url_button):
         e.page.update()
 
 def main(page):
-    page.title = "Acortador de URL"
+    page.title = "Acorter v2.0"
     page.window.icon_path = "assets/icon_windows.ico"
-    page.window.width = 550  # Ajusta el ancho de la ventana
+    page.window_width = 550
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    titulo_soft = ft.Text("Quieres acortar una URL? Hazlo aqui!", size=30, weight=ft.FontWeight.BOLD)
+    titulo_soft = ft.Text("Quieres acortar una URL? \n Hazlo aqui!", size=24)
     url_input = ft.TextField(label="Ingresa la URL larga", width=400)
     custom_suffix_input = ft.TextField(label="Sufijo personalizado (opcional)", width=400)
     result_label = ft.Text("")  # Para mostrar el texto "URL acortada:"
@@ -96,29 +96,57 @@ def main(page):
         )
     )
 
-    # Crear una columna para centrar el contenido
-    column = ft.Column(
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=20  # Espaciado entre los elementos
+    # Crear la marca de agua de copyright
+    copyright_text = ft.Text(
+        "© codigopiter",
+        color=ft.colors.GREY_400,
+        size=18,
+        italic=True
     )
 
-    # Agregar los elementos a la columna
-    column.controls.extend([
-        titulo_soft,
-        url_input,
-        custom_suffix_input,
-        shorten_button,
-        result_label,
-        short_url_button,
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[copy_button]
-        )
-    ])
+    copyright_container = ft.Container(
+        content=copyright_text,
+        alignment=ft.alignment.bottom_right,
+        padding=10
+    )
 
-    # Agregar la columna a la página
-    page.add(column)
+    # Crear una columna para el contenido principal
+    main_column = ft.Column(
+        alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=20,
+        controls=[
+            titulo_soft,
+            url_input,
+            custom_suffix_input,
+            shorten_button,
+            result_label,
+            short_url_button,
+            ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER,
+                controls=[copy_button]
+            )
+        ]
+    )
+
+    # Crear un contenedor para el contenido principal que ocupe todo el espacio disponible
+    main_container = ft.Container(
+        content=main_column,
+        expand=True,
+        alignment=ft.alignment.center
+    )
+
+    # Crear una columna que contenga el contenido principal y la marca de agua
+    page_content = ft.Column(
+        controls=[
+            main_container,
+            copyright_container
+        ],
+        expand=True
+    )
+
+    # Agregar el contenido a la página
+    page.add(page_content)
 
 def handle_shorten(long_url, custom_suffix, result_label, short_url_button, open_button, copy_button):
     response, error_message = shorten_url(long_url, custom_suffix)
