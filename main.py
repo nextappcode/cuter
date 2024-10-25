@@ -57,12 +57,22 @@ def copy_short_url(e, short_url_button):
         e.page.snack_bar.open = True
         e.page.update()
 
-def main(page):
+def main(page: ft.Page):
+    def on_page_load(_):
+        if page.overlay:
+            page.overlay.clear()
+        page.update()
+
+    page.on_load = on_page_load
+    
     page.title = "Acorter v2.0"
     page.window.icon_path = "assets/icon_windows.ico"
     page.window_width = 550
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    
+    # Agregar esta línea para quitar la imagen de carga
+    page.overlay.clear()
 
     titulo_soft = ft.Text("Quieres acortar una URL? \n Hazlo aqui!", size=24)
     url_input = ft.TextField(label="Ingresa la URL larga", width=400)
@@ -146,7 +156,15 @@ def main(page):
     )
 
     # Agregar el contenido a la página
-    page.add(page_content)
+    page.add(
+        titulo_soft,
+        url_input,
+        custom_suffix_input,
+        shorten_button,
+        result_label,
+        short_url_button,
+        # ... otros controles ...
+    )
 
 def handle_shorten(long_url, custom_suffix, result_label, short_url_button, open_button, copy_button):
     response, error_message = shorten_url(long_url, custom_suffix)
@@ -155,4 +173,10 @@ def handle_shorten(long_url, custom_suffix, result_label, short_url_button, open
 
 #if __name__ == "__main__":
 #    ft.app(target=main,assets_dir="assets")
-ft.app(target=main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
+ft.app(
+    target=main,
+    assets_dir="assets",
+    view=ft.AppView.WEB_BROWSER,
+    web_renderer="canvaskit",
+    use_color_emoji=True
+)
