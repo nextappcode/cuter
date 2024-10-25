@@ -67,7 +67,7 @@ def main(page: ft.Page):
     
     page.title = "Acorter v2.0"
     page.window.icon_path = "assets/icon_windows.ico"
-    page.window_width = 550
+    page.window.width = 550  # Cambiado de page.window_width a page.window.width
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     
@@ -156,15 +156,7 @@ def main(page: ft.Page):
     )
 
     # Agregar el contenido a la página
-    page.add(
-        titulo_soft,
-        url_input,
-        custom_suffix_input,
-        shorten_button,
-        result_label,
-        short_url_button,
-        # ... otros controles ...
-    )
+    page.add(page_content)
 
 def handle_shorten(long_url, custom_suffix, result_label, short_url_button, open_button, copy_button):
     response, error_message = shorten_url(long_url, custom_suffix)
